@@ -1,17 +1,18 @@
-class Aeronave {
-    constructor(codigo,modelo,tipo,capacidade, alcance){
-    codigo: string,
-    modelo: string,
-    tipo: number,
-    capacidade: number,
-    alcance: number
+import Enums = require("./Enums");
 
-    codigo: this.codigo
-    modelo: this.modelo
-    tipo: this.tipo
-    capacidade: this.capacidade
-    alcance: this.alcance
+export class Aeronave {
+    codigo: string;
+    modelo: string;
+    tipo: Enums.TipoAeronave;
+    capacidade: number;
+    alcance: number;
+    peca: Array<Peca> = []
+
+    constructor(codigo: string, modelo: string, tipo: TipoAeronave, capacidade: number, alcance: number){
+    this.codigo = codigo 
+    this.modelo = modelo 
+    this.tipo = tipo
+    this.capacidade = capacidade 
+    this.alcance = alcance 
     }    
-
-    peca = Array<Peca> = []
 }

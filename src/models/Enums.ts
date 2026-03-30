@@ -1,27 +1,27 @@
-TipoAeronave {
-
+export enum TipoAeronave {
+    COMERCIAL, MILITAR
 }
 
-TipoPeca {
-
+export enum TipoPeca {
+    NACIONAL, IMPORTADA
 }
 
-StatusPeca {
-
+export enum StatusPeca {
+    EM_PRODUCAO, EM_TRANSPORTE, PRONTA
 }
 
-StatusEtapa {
-
+export enum StatusEtapa {
+    PENDENTE, ANDAMENTO, CONCLUIDA
 }
 
-NivelPermissao {
-
+export enum NivelPermissao {
+    ADMINISTRADOR, ENGENHEIRO, OPERADOR
 }
 
-TipoTeste {
-
+export enum TipoTeste {
+    ELETRICO, HIDRAULICO, AERODINAMICO
 }
 
-ResultadoTeste {
-    
+export enum ResultadoTeste {
+    APROVADO, REPROVADO
 }
