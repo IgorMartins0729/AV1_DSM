@@ -1,0 +1,19 @@
+[
+  {
+    "codigo": "1",
+    "modelo": "1",
+    "tipo": "1",
+    "capacidade": 1,
+    "alcance": 1,
+    "pecas": [
+      {
+        "nome": "1",
+        "tipo": "1",
+        "fornecedor": "1",
+        "status": "1"
+      }
+    ],
+    "etapas": [],
+    "testes": []
+  }
+]

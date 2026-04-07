@@ -10,6 +10,30 @@ import { Teste } from './models/Teste';
 const leitor = readline.createInterface({ input: process.stdin, output: process.stdout });
 let frota: Array<Aeronave> = [];
 let equipes: Array<Funcionario> = [];
+let usuarioLogado: Funcionario | null = null;
+
+function fazerLogin(){
+    if (equipes.length === 0) {
+        console.log("Nenhum funcionário cadastrado.");
+        return cadastrarFuncionario();
+    }
+
+    leitor.question("Usuário: ", (usuario_digitado) => {
+        leitor.question("Senha: ", (senha_digitada) => {
+            
+            const funcionarioEncontrado = equipes.find((f) => f.usuario === usuario_digitado && f.senha === senha_digitada);
+
+            if (funcionarioEncontrado) {
+                usuarioLogado = funcionarioEncontrado;
+                console.log(`\n Acesso Autorizado.`);
+                exibirMenu(); 
+            } else {
+                console.log("\n Usuário ou senha incorretos.");
+                fazerLogin();
+            }
+        });
+    });
+}
 
 function exibirMenu(){
     console.log("\n-- Aerocode --");
@@ -64,6 +88,13 @@ function exibirMenu(){
 
 function cadastrarAeronave(){
     leitor.question("Qual o código? ", (codigo_usuario) => {
+        const aviaoExiste = frota.find((aviao) => aviao.codigo === codigo_usuario);
+
+        if (aviaoExiste) {
+            console.log("já existe uma aeronave cadastrada.")
+            return exibirMenu();
+        }
+
         leitor.question("Qual o modelo? ", (modelo_usuario) => {
             leitor.question("Qual o tipo de Aeronave? ", (tipo_aeronave_usuario) => {
                 leitor.question("Qual a capacidade? ", (capacidade_usuario) => {
@@ -205,4 +236,4 @@ function salvarDados(){
 
 // Embraer
 carregarDados();
-exibirMenu();
+fazerLogin();

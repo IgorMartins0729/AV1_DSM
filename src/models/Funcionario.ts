@@ -18,4 +18,12 @@ export class Funcionario {
         this.senha = senha;
         this.nivelPermissao = nivelPermissao; 
     }
+
+    autenticar(usuario_digitado: string, senha_digitada: string): boolean {
+        if (this.usuario === usuario_digitado && this.senha === senha_digitada) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

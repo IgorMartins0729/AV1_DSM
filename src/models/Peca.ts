@@ -13,4 +13,9 @@ export class Peca {
     this.fornecedor = fornecedor;
     this.status = status;
     }
+
+    atualizarStatus(novoStatus: any){
+        this.status = novoStatus;
+        console.log(`Status da peça alterado para: ${this.status}`);
+    }
 }

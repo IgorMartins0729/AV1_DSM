@@ -20,4 +20,8 @@ export class Aeronave {
     this.capacidade = capacidade; 
     this.alcance = alcance; 
     }    
+
+    detalhes() {
+        console.log(`Aeronave ${this.modelo} (Código: ${this.codigo}) - Capacidade: ${this.capacidade}`);
+    }
 }
