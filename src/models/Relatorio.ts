@@ -3,16 +3,20 @@ import { Aeronave } from './Aeronave';
 
 export class Relatorio {
     
-    gerarRelatorioAeronave(aeronave: Aeronave): string {
+    gerarRelatorioAeronave(aeronave: Aeronave, cliente: string, dataEntrega: string): string {
         let conteudo = `   Produção (Certificado)    \n`;
         conteudo += `Data de Emissão: ${new Date().toLocaleString()}\n\n`;
         
-        conteudo += `Dados da aeronvae:\n`;
+        conteudo += `Dados da aeronave:\n`;
         conteudo += `Código: ${aeronave.codigo}\n`;
         conteudo += `Modelo: ${aeronave.modelo}\n`;
         conteudo += `Tipo: ${aeronave.tipo}\n`;
         conteudo += `Capacidade: ${aeronave.capacidade} passageiros\n`;
         conteudo += `Alcance: ${aeronave.alcance} km\n\n`;
+        
+        conteudo += `Dados Comerciais:\n`;
+        conteudo += `Cliente: ${cliente}\n`;
+        conteudo += `Data de Entrega Acordada: ${dataEntrega}\n\n`;
         
         conteudo += `Peças utilizadas\n`;
         if (aeronave.pecas && aeronave.pecas.length > 0) {
@@ -38,8 +42,8 @@ export class Relatorio {
         return conteudo;
     }
 
-    salvarRelatorio(aeronave: Aeronave) {
-        const conteudo = this.gerarRelatorioAeronave(aeronave);
+    salvarRelatorio(aeronave: Aeronave, cliente: string, dataEntrega: string) {
+        const conteudo = this.gerarRelatorioAeronave(aeronave, cliente, dataEntrega);
         const nomeArquivo = `Relatorio_Aeronave_${aeronave.codigo}.txt`;
         
         fs.writeFileSync(nomeArquivo, conteudo, 'utf-8');

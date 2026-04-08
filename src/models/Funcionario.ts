@@ -28,10 +28,10 @@ export class Funcionario {
     }
 
     salvar(): void {
-        console.log("")
+        console.log("A persistência deste funcionário é gerenciada pelo módulo central no index.ts.")
     }
 
     carregar(): void {
-        console.log(".");
+        console.log("O carregamento é gerenciado pelo módulo central no index.ts.");
     }
 }

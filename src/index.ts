@@ -21,15 +21,14 @@ function fazerLogin(){
 
     leitor.question("Usuário: ", (usuario_digitado) => {
         leitor.question("Senha: ", (senha_digitada) => {
-            
-            const funcionarioEncontrado = equipes.find((f) => f.usuario === usuario_digitado && f.senha === senha_digitada);
+            const funcionarioEncontrado = equipes.find((f) => f.autenticar(usuario_digitado, senha_digitada));
 
             if (funcionarioEncontrado) {
                 usuarioLogado = funcionarioEncontrado;
-                console.log(`\n Acesso Autorizado.`);
+                console.log(`\nAcesso Autorizado.`);
                 exibirMenu(); 
             } else {
-                console.log("\n Usuário ou senha incorretos.");
+                console.log("\nUsuário ou senha incorretos.");
                 fazerLogin();
             }
         });
@@ -44,17 +43,25 @@ function exibirMenu(){
     console.log("4. Adicionar Peça a uma Aeronave");
     console.log("5. Adicionar Etapa de Produção");
     console.log("6. Adicionar Teste a uma Aeronave");
-    console.log("7. Gerar Relatório Final")
-    console.log("8. Sair");
+    console.log("7. Atualizar Status de uma Peça");
+    console.log("8. Gerenciar Etapas de Produção");
+    console.log("9. Gerar Relatório Final");
+    console.log("10. Sair");
 
     leitor.question("Escolha uma opção:  ", (opcaoEscolhida) => {
-        if (opcaoEscolhida == "1") {
-            console.log("\nVocê escolheu cadastrar Aeronave:");
-            cadastrarAeronave();
-        }
-        else if(opcaoEscolhida == "2"){
-            console.log("\nVocê escolheu cadastrar Funcionário:");
-            cadastrarFuncionario();
+        if (opcaoEscolhida == "1" || opcaoEscolhida == "2") {
+            if (usuarioLogado?.nivelPermissao !== "ADMINISTRADOR" as any) {
+                console.log("\nAcesso negado. Apenas administradores podem realizar cadastros.");
+                return exibirMenu();
+            }
+            if(opcaoEscolhida == "1") {
+                console.log("\nVocê escolheu cadastrar Aeronave:");
+                cadastrarAeronave();
+            }
+            if(opcaoEscolhida == "2") {
+                console.log("\nVocê escolheu cadastrar Funcionário:");
+                cadastrarFuncionario();
+            }
         }
         else if(opcaoEscolhida == "3"){
             console.log("\n-As FROTAS cadastradas são:");
@@ -62,34 +69,54 @@ function exibirMenu(){
             console.log("\n-As EQUIPES cadastradas são:");
             console.log(JSON.stringify(equipes, null, 2));
             console.log("----------------------------------\n");
-            console.log("----------------------------------\n");
             exibirMenu();
         }
-        else if(opcaoEscolhida == "4"){
-            console.log("\nVocê escolheu adicionar uma Peça:");
-            adicionarPeca();
-        }
-        else if(opcaoEscolhida == "5"){
-            console.log("\nVocê escolheu adicionar uma Etapa de Produção:");
-            adicionarEtapa();
-        }
-        else if(opcaoEscolhida == "6"){
-            console.log("\nVocê escolheu adicionar um Teste:");
-            adicionarTeste();
+        else if(opcaoEscolhida == "4" || opcaoEscolhida == "5" || opcaoEscolhida == "6"){
+            if (usuarioLogado?.nivelPermissao === "OPERADOR" as any && opcaoEscolhida !== "4") {
+                 console.log("\nAcesso negado. Operadores só possuem permissão para adicionar peças.");
+                 return exibirMenu();
+            }
+            if(opcaoEscolhida == "4"){
+                console.log("\nVocê escolheu adicionar uma Peça:");
+                adicionarPeca();
+            }
+            if(opcaoEscolhida == "5"){
+                console.log("\nVocê escolheu adicionar uma Etapa de Produção:");
+                adicionarEtapa();
+            }
+            if(opcaoEscolhida == "6"){
+                console.log("\nVocê escolheu adicionar um Teste:");
+                adicionarTeste();
+            }
         }
         else if(opcaoEscolhida == "7"){
+            atualizarPeca();
+        }
+        else if(opcaoEscolhida == "8"){
+            if (usuarioLogado?.nivelPermissao === "OPERADOR" as any) {
+                console.log("\nAcesso negado. Apenas engenheiros ou administradores gerenciam etapas.");
+                return exibirMenu();
+            }
+            gerenciarEtapa();
+        }
+        else if(opcaoEscolhida == "9"){
             leitor.question("Qual o código da aeronave para gerar o relatório final? ", (codigo) => {
                 const aviao = frota.find((a) => a.codigo === codigo);
                 if (aviao) {
-                    const relatorio = new Relatorio();
-                    relatorio.salvarRelatorio(aviao);
+                    leitor.question("Qual o nome do cliente que comprou a aeronave? ", (nomeCliente) => {
+                        leitor.question("Qual a data prevista para entrega? ", (dataEntrega) => {
+                            const relatorio = new Relatorio();
+                            relatorio.salvarRelatorio(aviao, nomeCliente, dataEntrega);
+                            exibirMenu();
+                        });
+                    });
                 } else {
                     console.log("Avião não encontrado");
+                    exibirMenu();
                 }
-                exibirMenu();
             });
         }
-        else if(opcaoEscolhida == "8"){
+        else if(opcaoEscolhida == "10"){
             console.log("Finalizando.");
             return leitor.close();
         }
@@ -105,7 +132,7 @@ function cadastrarAeronave(){
         const aviaoExiste = frota.find((aviao) => aviao.codigo === codigo_usuario);
 
         if (aviaoExiste) {
-            console.log("já existe uma aeronave cadastrada.")
+            console.log("já existe uma aeronave cadastrada com esse código.")
             return exibirMenu();
         }
 
@@ -134,10 +161,10 @@ function cadastrarFuncionario(){
                         leitor.question("Qual a senha? ", (senha_usuario) => {
                             leitor.question("Qual o nivel de Permissão? ", (permissao_usuario) => {
                                 const novoFuncionario = new Funcionario(id_usuario, nome_usuario, telefone_usuario, endereco_usuario, usuario_digitado, senha_usuario, permissao_usuario as any);
-                                console.log("Novo funcionário cadastrado com sucesso!");
                                 equipes.push(novoFuncionario);
+                                console.log("Novo funcionário cadastrado com sucesso!");
                                 salvarDados();
-                                exibirMenu();
+                                if(!usuarioLogado) { fazerLogin(); } else { exibirMenu(); }
                             });
                         });
                     });
@@ -230,14 +257,103 @@ function adicionarTeste(){
     });
 }
 
+function atualizarPeca(){
+    leitor.question("Código da aeronave para atualizar peça: ", (codigo) => {
+        const aviao = frota.find((a) => a.codigo === codigo);
+        if (aviao && aviao.pecas && aviao.pecas.length > 0) {
+            console.log("Peças Disponíveis:");
+            aviao.pecas.forEach((p, i) => console.log(`${i}. ${p.nome} - Status: ${p.status}`));
+            leitor.question("Digite o número da peça para atualizar: ", (indiceStr) => {
+                const index = Number(indiceStr);
+                if(aviao.pecas[index]) {
+                    leitor.question("Novo status da peça: ", (novoStatus) => {
+                        aviao.pecas[index].atualizarStatus(novoStatus as any);
+                        salvarDados();
+                        exibirMenu();
+                    });
+                } else {
+                    console.log("Índice de peça não encontrado.");
+                    exibirMenu();
+                }
+            });
+        } else {
+            console.log("Nenhuma peça encontrada nessa aeronave.");
+            exibirMenu();
+        }
+    });
+}
+
+function gerenciarEtapa(){
+    leitor.question("Código da aeronave para gerenciar etapa: ", (codigo) => {
+        const aviao = frota.find((a) => a.codigo === codigo);
+        if (aviao && aviao.etapas && aviao.etapas.length > 0) {
+            console.log("Etapas Disponíveis:");
+            aviao.etapas.forEach((e, i) => console.log(`${i}. ${e.nome} - Status: ${e.status}`));
+            leitor.question("Digite o número da etapa: ", (indiceStr) => {
+                const index = Number(indiceStr);
+                const etapa = aviao.etapas[index];
+                if(etapa) {
+                    console.log("\nO que deseja fazer?");
+                    console.log("1. Iniciar Etapa");
+                    console.log("2. Concluir Etapa");
+                    console.log("3. Alocar Funcionário");
+                    leitor.question("Escolha a ação: ", (acao) => {
+                        if(acao === "1") {
+                            etapa.iniciar();
+                        } else if (acao === "2") {
+                            if(index > 0 && aviao.etapas[index - 1].status !== ("CONCLUIDA" as any)) {
+                                console.log(`Erro: Você não pode concluir esta etapa. A etapa anterior '${aviao.etapas[index - 1].nome}' ainda não foi finalizada.`);
+                            } else {
+                                etapa.finalizar();
+                            }
+                        } else if (acao === "3") {
+                            leitor.question("Qual o ID do funcionário? ", (idFunc) => {
+                                const func = equipes.find(f => f.id === idFunc);
+                                if(func) {
+                                    etapa.associarFuncionario(func);
+                                } else {
+                                    console.log("Funcionário não encontrado no sistema.");
+                                }
+                                salvarDados();
+                                return exibirMenu();
+                            });
+                            return; 
+                        }
+                        salvarDados();
+                        exibirMenu();
+                    });
+                } else {
+                    console.log("Etapa não encontrada.");
+                    exibirMenu();
+                }
+            });
+        } else {
+            console.log("Nenhuma etapa encontrada nessa aeronave.");
+            exibirMenu();
+        }
+    });
+}
+
 function carregarDados(){
     if (fs.existsSync('frota.json')){
         const textoFrota = fs.readFileSync('frota.json','utf-8');
-        frota = JSON.parse(textoFrota);
+        const frotaRaw = JSON.parse(textoFrota);
+        frota = frotaRaw.map((a: any) => {
+            const aviao = new Aeronave(a.codigo, a.modelo, a.tipo, a.capacidade, a.alcance);
+            aviao.pecas = a.pecas ? a.pecas.map((p:any) => new Peca(p.nome, p.tipo, p.fornecedor, p.status)) : [];
+            aviao.etapas = a.etapas ? a.etapas.map((e:any) => {
+                const etapa = new Etapa(e.nome, e.prazo, e.status);
+                etapa.funcionarios = e.funcionarios || [];
+                return etapa;
+            }) : [];
+            aviao.testes = a.testes ? a.testes.map((t:any) => new Teste(t.tipo, t.resultado)) : [];
+            return aviao;
+        });
     }
     if (fs.existsSync('equipes.json')){
         const textoEquipes = fs.readFileSync('equipes.json', 'utf-8');
-        equipes = JSON.parse(textoEquipes);
+        const equipesRaw = JSON.parse(textoEquipes);
+        equipes = equipesRaw.map((f:any) => new Funcionario(f.id, f.nome, f.telefone, f.endereco, f.usuario, f.senha, f.nivelPermissao));
     }
 }
 

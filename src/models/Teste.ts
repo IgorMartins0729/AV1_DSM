@@ -8,4 +8,7 @@ export class Teste {
         this.tipo = tipo;
         this.resultado = resultado;
     }
+
+    salvar(): void { console.log("Aviso: Persistência gerenciada pelo index.ts"); }
+    carregar(): void { console.log("Aviso: Carregamento gerenciado pelo index.ts"); }
 }

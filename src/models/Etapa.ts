@@ -50,4 +50,7 @@ export class Etapa {
             this.funcionarios.forEach((f) => console.log(`- ${f.nome} (Cargo: ${f.nivelPermissao})`));
         }
     }
+
+    salvar(): void { console.log("Aviso: Persistência gerenciada pelo index.ts"); }
+    carregar(): void { console.log("Aviso: Carregamento gerenciado pelo index.ts"); }
 }

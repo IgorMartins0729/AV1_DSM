@@ -21,7 +21,10 @@ export class Aeronave {
     this.alcance = alcance; 
     }    
 
-    detalhes() {
-        console.log(`Aeronave ${this.modelo} (Código: ${this.codigo}) - Capacidade: ${this.capacidade}`);
+    detalhes(): void {
+        console.log(`Aeronave ${this.modelo} (Código: ${this.codigo}) - Tipo: ${this.tipo} | Capacidade: ${this.capacidade} | Alcance: ${this.alcance}km`);
     }
+
+    salvar(): void { console.log("Persistência gerenciada pelo index.ts"); }
+    carregar(): void { console.log("Carregamento gerenciado pelo index.ts"); }
 }

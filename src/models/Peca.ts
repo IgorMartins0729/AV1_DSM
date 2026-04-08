@@ -18,4 +18,7 @@ export class Peca {
         this.status = novoStatus;
         console.log(`Status da peça alterado para: ${this.status}`);
     }
+
+    salvar(): void { console.log("Aviso: Persistência gerenciada pelo index.ts"); }
+    carregar(): void { console.log("Aviso: Carregamento gerenciado pelo index.ts"); }
 }
