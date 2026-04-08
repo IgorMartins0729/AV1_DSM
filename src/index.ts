@@ -265,9 +265,11 @@ function atualizarPeca(){
             aviao.pecas.forEach((p, i) => console.log(`${i}. ${p.nome} - Status: ${p.status}`));
             leitor.question("Digite o número da peça para atualizar: ", (indiceStr) => {
                 const index = Number(indiceStr);
-                if(aviao.pecas[index]) {
+                const pecaSelecionada = aviao.pecas[index];
+                
+                if(pecaSelecionada) { 
                     leitor.question("Novo status da peça: ", (novoStatus) => {
-                        aviao.pecas[index].atualizarStatus(novoStatus as any);
+                        pecaSelecionada.atualizarStatus(novoStatus as any);
                         salvarDados();
                         exibirMenu();
                     });
@@ -292,6 +294,7 @@ function gerenciarEtapa(){
             leitor.question("Digite o número da etapa: ", (indiceStr) => {
                 const index = Number(indiceStr);
                 const etapa = aviao.etapas[index];
+                
                 if(etapa) {
                     console.log("\nO que deseja fazer?");
                     console.log("1. Iniciar Etapa");
@@ -301,8 +304,10 @@ function gerenciarEtapa(){
                         if(acao === "1") {
                             etapa.iniciar();
                         } else if (acao === "2") {
-                            if(index > 0 && aviao.etapas[index - 1].status !== ("CONCLUIDA" as any)) {
-                                console.log(`Erro: Você não pode concluir esta etapa. A etapa anterior '${aviao.etapas[index - 1].nome}' ainda não foi finalizada.`);
+                            const etapaAnterior = index > 0 ? aviao.etapas[index - 1] : null;
+                            
+                            if(etapaAnterior && etapaAnterior.status !== ("CONCLUIDA" as any)) {
+                                console.log(`Erro: Você não pode concluir esta etapa. A etapa anterior '${etapaAnterior.nome}' ainda não foi finalizada.`);
                             } else {
                                 etapa.finalizar();
                             }
