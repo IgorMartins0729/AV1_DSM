@@ -6,6 +6,7 @@ import { Funcionario } from './models/Funcionario';
 import { Peca } from './models/Peca';
 import { Etapa } from './models/Etapa'; 
 import { Teste } from './models/Teste';
+import { Relatorio } from './models/Relatorio';
 
 const leitor = readline.createInterface({ input: process.stdin, output: process.stdout });
 let frota: Array<Aeronave> = [];
@@ -43,7 +44,8 @@ function exibirMenu(){
     console.log("4. Adicionar Peça a uma Aeronave");
     console.log("5. Adicionar Etapa de Produção");
     console.log("6. Adicionar Teste a uma Aeronave");
-    console.log("7. Sair");
+    console.log("7. Gerar Relatório Final")
+    console.log("8. Sair");
 
     leitor.question("Escolha uma opção:  ", (opcaoEscolhida) => {
         if (opcaoEscolhida == "1") {
@@ -76,7 +78,19 @@ function exibirMenu(){
             adicionarTeste();
         }
         else if(opcaoEscolhida == "7"){
-            console.log("Finalizando..");
+            leitor.question("Qual o código da aeronave para gerar o relatório final? ", (codigo) => {
+                const aviao = frota.find((a) => a.codigo === codigo);
+                if (aviao) {
+                    const relatorio = new Relatorio();
+                    relatorio.salvarRelatorio(aviao);
+                } else {
+                    console.log("Avião não encontrado");
+                }
+                exibirMenu();
+            });
+        }
+        else if(opcaoEscolhida == "8"){
+            console.log("Finalizando.");
             return leitor.close();
         }
         else {
@@ -138,11 +152,11 @@ function adicionarPeca(){
         const procurandoCodigo = frota.find((aviao) => aviao.codigo === codigo_digitado);
         
         if (procurandoCodigo) {
-            leitor.question("Qual o ID da Peça? ", (id_digitado) =>{
+            leitor.question("Qual o nome da Peça? ", (nome_digitado) =>{
                 leitor.question("Qual o tipo da Peça? ", (tipo_peca_digitada) => {
                     leitor.question("Qual o fornecedor da peça? ", (fornecedor_digitado) => {
                         leitor.question("Qual o status da peça? ", (status_peca_digitado) => {
-                            const novaPeca = new Peca(id_digitado, tipo_peca_digitada as any, fornecedor_digitado, status_peca_digitado as any);
+                            const novaPeca = new Peca(nome_digitado, tipo_peca_digitada as any, fornecedor_digitado, status_peca_digitado as any);
                             
                             if (!procurandoCodigo.pecas) procurandoCodigo.pecas = [];
                             

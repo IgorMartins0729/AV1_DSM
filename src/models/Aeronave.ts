@@ -1,7 +1,7 @@
-import { TipoAeronave } from "./Enums.js";
-import { Etapa } from "./Etapa.js";
-import { Peca } from "./Peca.js";
-import { Teste } from "./Teste.js";
+import { TipoAeronave } from "./Enums";
+import { Etapa } from "./Etapa";
+import { Peca } from "./Peca";
+import { Teste } from "./Teste";
 
 export class Aeronave {
     codigo: string;

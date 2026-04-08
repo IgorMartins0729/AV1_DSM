@@ -1,0 +1,18 @@
+   Produção (Certificado)    
+Data de Emissão: 08/04/2026, 10:36:05
+
+Dados da aeronvae:
+Código: 1
+Modelo: 1
+Tipo: 1
+Capacidade: 1 passageiros
+Alcance: 1 km
+
+Peças utilizadas
+- Peça Nome: 1 | Tipo: 1 | Fornecedor: 1 | Status: 1
+
+Etapas de produção
+Nenhuma etapa registrada.
+
+ Testes:
+Nenhum teste registrado.

@@ -1,4 +1,4 @@
-import { ResultadoTeste, TipoTeste } from "./Enums.js"
+import { ResultadoTeste, TipoTeste } from "./Enums"
 
 export class Teste {
     tipo: TipoTeste;
